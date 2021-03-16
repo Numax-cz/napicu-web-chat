@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200;0,300;0,400;0,500;1,200;1,300;1,400&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NaPicu - Chat</title>
+
+    <link rel="icon" href="https://napicu.eu/favicon.png">
+    <meta itemprop="name" content="NaPicu - Chat">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="author" content="Numax">
+
+    <meta itemprop="image" content="https://napicu.eu/logo-meta.png">
+    <meta itemprop="description" content="Ahoj kamaráde! Máš chuť na pořádný chat? Tato stránka je přímo pro tebe!">
+    
+    <meta property="og:url" content="https://chat.napicu.eu/">
+    <meta property="og:title" content="NaPicu">
+    <meta property="og:description" content="Ahoj kamaráde! Máš chuť na pořádný chat? Tato stránka je přímo pro tebe!">
+    <meta property="og:site_name" content="NaPicu - Chat">
+    <meta property="og:image" content="https://napicu.eu/logo-meta.png">
+
+    <meta name="twitter:url" content="https://chat.napicu.eu/">
+    <meta name="twitter:title" content="NaPicu">
+    <meta name="twitter:description" content="Ahoj kamaráde! Máš chuť na pořádný chat? Tato stránka je přímo pro tebe!">
+    <meta name="twitter:site_name" content="NaPicu - Chat">
+    <meta name="twitter:image" content="https://napicu.eu/logo-meta.png">
+
+    <meta name="msapplication-TileColor" content="#f39c12">
+    <meta name="theme-color" content="#f39c12">
+
+
+
+
+
+</head>
+<body>
+    <section id="chat">
+        <div class="TopMenu">
+            <div id="Name"></div>
+            <a href="/logout" id="Exist">Exit</a>
+        </div>
+        
+        <div class="Pole-Chat">
+            <div class="Pole-Chat-HlavniBox" id="MessageClass">
+                <p id="message"></p>
+
+            </div>
+            
+        </div>
+        
+    </section>
+    <div class="input">
+
+        <textarea id="inputTxt" rows="1"></textarea>
+    </div>
+    
+</body>
+</html>
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src = "/socket.io/socket.io.js"></script>
+
+
+<script type="text/javascript">
+    $('#inputTxt').on('input', function () {
+        this.style.height = 'auto';
+         
+        this.style.height = (this.scrollHeight) + 'px';
+    });
+</script>
+<script>
+    var socket = io();
+    var name; //Jméno které vidí pouze uživatel 
+    
+    socket.on("UserConnect", data => {
+        name = data.user;
+        document.getElementById("Name").innerText = name
+    });
+    socket.on("connected", name => {
+        CreatJoinAlert(name + " se připojil")
+    });
+    socket.on("UserDisconnect", name => {
+        CreatLeaveAlert(name + " se odpojil");
+        
+    });
+    socket.on("message", data => {
+        CreatName(data.user);
+        CreatElement(data.message);
+    });
+
+</script>
+<script>
+    const message = document.getElementById("message");
+    const MessageClass = document.getElementById("MessageClass");
+    document.addEventListener("keydown", e => {
+        if(e.key == "Enter"){ //Dodělat regex!!
+            e.preventDefault();
+            var Input = document.getElementById("inputTxt");
+            if(Input.value != ""){
+                Input.rows = 1; 
+                Input.style.height = "48px" 
+                CreatName(name);
+                CreatElement(Input.value);
+                socket.emit("message-input", Input.value); 
+                Input.value = "";
+            }
+        }
+    });
+    function CreatElement(msg){
+        const messageElmt = document.createElement("p");
+        messageElmt.innerText = msg;
+        MessageClass.scrollTop = message.scrollHeight;
+        message.appendChild(messageElmt);
+    }
+    function CreatName(name){
+        const messageElmt = document.createElement("span");
+        messageElmt.innerText = name;
+        message.appendChild(messageElmt);
+    }
+    function CreatJoinAlert(msg){
+        //Alert Id
+        const ElementAlert = document.createElement("div");
+        ElementAlert.setAttribute("id", "Alert");
+        message.appendChild(ElementAlert);
+        //Alert Id > label Id
+        const Join = document.createElement("label");
+        Join.setAttribute("id", "PlusJoin");
+        Join.innerText = "+";
+        ElementAlert.appendChild(Join);
+        const Message = document.createElement("label");
+        Message.innerText = msg;
+        ElementAlert.appendChild(Message);
+    }
+    function CreatLeaveAlert(msg){
+        //Alert Id
+        const ElementAlert = document.createElement("div");
+        ElementAlert.setAttribute("id", "Alert");
+        message.appendChild(ElementAlert);
+        //Alert Id > label Id
+        const Join = document.createElement("label");
+        Join.setAttribute("id", "Leave");
+        Join.innerText = "-";
+        ElementAlert.appendChild(Join);
+        const Message = document.createElement("label");
+        Message.innerText = msg;
+        ElementAlert.appendChild(Message);
+    }
+
+
+</script>
+
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+        font-family: 'Source Code Pro', monospace;
+        font-weight: 600;
+    }
+    /* Hlavní chat */
+    body{
+        background-color: #2b292a;
+    }
+
+    .TopMenu{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 17px;
+    }
+    #Name{
+        color: white;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+    .TopMenu a{
+        font-weight: 600;
+        font-size: 1.2rem;
+        color: red;
+        text-decoration: none;
+    }
+    .Pole-Chat-HlavniBox{
+        height: 80vh;
+        overflow-y: auto;
+        width: 100%;
+        max-width: 40%;
+        margin: auto;
+        padding: 20px;
+    }
+    textarea{
+        font-size: 1.1rem;
+        position: fixed;
+        padding: 13px;
+        bottom: 10px;
+        resize: none;
+        border-radius: 10px;
+        outline: none;
+        width: 100%;
+        max-width: 50%;
+        left: 0;
+        right: 0;
+        background-color: #d6c8cf28;
+        margin: auto;
+        color: white;
+        font-weight: 400;
+        display: flex;
+        height: 48px;
+        max-height: 10vh;
+    }
+    #PlusJoin{
+        color: #2ecc71;
+        margin-right: 10px;
+        
+    }
+    #Leave{
+        color: #e74c3c;
+        margin-right: 10px;
+    }
+    .input{
+        display: flex;
+        font-size: 1.1rem;
+        position: fixed;
+        padding: 7px 10px;
+        bottom: 10px;
+        right: 10%; 
+        margin: auto;
+        color: white;
+        font-weight: 400;
+        display: flex
+    }
+    
+    #Alert{
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.247);
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        display: flex;
+
+    }
+
+    span{
+       
+        font-weight: 500;
+        color: white;
+        font-size: 1.1rem;
+
+    }
+    p{
+        margin-left: 10px;
+        font-weight: 300;
+        font-size: 1.07rem;
+        margin-bottom: 8px;
+        color: rgba(255, 255, 255, 0.800);
+    }
+
+
+
+
+
+
+</style>
