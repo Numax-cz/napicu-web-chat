@@ -5,11 +5,91 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NapicuChat</title>
+    <link rel="icon" href="https://napicu.eu/favicon.png">
+    <meta itemprop="name" content="NaPicu - Chat">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="author" content="Numax">
+
+    <meta itemprop="image" content="https://napicu.eu/logo-meta.png">
+    <meta itemprop="description" content="Ahoj kamaráde! Máš chuť na pořádný chat? Tato stránka je přímo pro tebe!">
+    
+    <meta property="og:url" content="https://chat.napicu.eu/">
+    <meta property="og:title" content="NaPicu">
+    <meta property="og:description" content="Ahoj kamaráde! Máš chuť na pořádný chat? Tato stránka je přímo pro tebe!">
+    <meta property="og:site_name" content="NaPicu - Chat">
+    <meta property="og:image" content="https://napicu.eu/logo-meta.png">
+
+    <meta name="twitter:url" content="https://chat.napicu.eu/">
+    <meta name="twitter:title" content="NaPicu">
+    <meta name="twitter:description" content="Ahoj kamaráde! Máš chuť na pořádný chat? Tato stránka je přímo pro tebe!">
+    <meta name="twitter:site_name" content="NaPicu - Chat">
+    <meta name="twitter:image" content="https://napicu.eu/logo-meta.png">
+
+    <meta name="msapplication-TileColor" content="#f39c12">
+    <meta name="theme-color" content="#f39c12">
 </head>
 <body>
-    <form action="/user" method="post">
-        <input type="text" name="usernameinput">
-        <button type="submit">Pokračovat</button>
-    </form>
+    <section id="Menu">
+        <div class="Form">
+            <form action="/user" method="post">
+                <input type="text" name="usernameinput">
+                <div class="Button">
+                    <button type="submit">Pokračovat</button>
+                </div>
+            </form>
+        </div>
+    </section>
 </body>
 </html>
+
+<style>
+    *{
+        padding: 0;
+        margin: 0;
+        font-family: 'Source Code Pro', monospace;
+        font-weight: 600;
+    }
+    body{
+        background-color: #2b292a;
+    }
+    #Menu{
+        display: table;
+        z-index: 1;
+        height: 100vh;
+        min-height: 500px;
+        width: 100%;
+    }
+    .Form{
+        display: table-cell;
+        vertical-align: middle;
+        padding-top: 130px;
+        padding-bottom: 100px;
+    }
+    form{
+        width: 100%;
+        max-width: 20%;
+        margin-left: auto;
+        margin-right: auto;
+
+    }
+    input{
+        width: 100%;
+        outline: none;
+        font-size: 1.4rem;
+        padding: 5px;
+        border: none;
+    }
+    button{
+        margin-top: 10px;
+        font-size: 1.2rem;
+        background-color: #2ecc71;
+        border: none;
+        border-radius: 5px;
+        padding: 6px;
+        cursor: pointer;
+    }
+
+
+
+
+</style>
