@@ -54,20 +54,20 @@ app.get("/logout", function(req, res){
 
 
 
+
 const User = {};
 
 io.on('connection', socket => {
-   var input = {UserCount: io.engine.clientsCount};
+
+
    User[socket.id] = jmeno;
-
    socket.broadcast.emit("connected", jmeno);
-
    socket.emit("UserConnect", {user: User[socket.id]}); 
    socket.on("message-input", msg => {
       socket.broadcast.emit("message", {message: msg, user: User[socket.id]});
    });
 
-   //socket.send(input)
+
 
    socket.on('disconnect', function () {
       socket.broadcast.emit("UserDisconnect", jmeno); 
